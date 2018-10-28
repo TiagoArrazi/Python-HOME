@@ -1,67 +1,71 @@
-def Merge(arr, b, m, e):
-
-    n1 = m - b + 1 # 1st subarray size
-    n2 = e - m # 2nd subarray size
-
-    L_Array = [0] * (n1)
-    R_Array = [0] * (n2)
-
-    for i in range(0,n1):
-        L_Array[i] = arr[b + i] # Copying to subarray
-
-    for j in range(0,n2):
-        R_Array[j] = arr[m + 1 + j] # Copying to subarray
-
-    i = 0
-    j = 0
-    k = b
-
-    while i < n1 and j < n2:
-
-        if L_Array[i] <= R_Array[j]:
-
-            arr[k] = L_Array[i]
-            i += 1
-
-        else:
-
-            arr[k] = R_Array[j]
-            j += 1
-
-        k += 1
-
-    while i < n1:
-
-        arr[k] = L_Array[i]
-        i += 1
-        k += 1
-
-    while j < n2:
-
-        arr[k] = R_Array[j]
-        j += 1
-        k += 1
-
-def MergeSort(arr, b, e):
-
-    m = (b + (e - 1)) // 2
-
-    if b < e:
-
-        MergeSort(arr, b, m)
-        MergeSort(arr, m+1, e)
-        Merge(arr, b, m, e)
-
-
-   
+import requests
 
 def main():
 
-    arr = [12,34,2,1,3,4,2,2,22,65,1,4,44,2,4,4,213,2,34,22,3,14,343,24,24,7,3742,4,24,777,4234,2,4,414,99,5656,867,8,9]
+	resp = requests.get("http://localhost:5000/p1").json()
 
-    MergeSort(arr, 0, len(arr) - 1)
+	mergeSort(resp['elementos'], 0, resp['n']-1) 
+	print(resp)
 
-    print(arr)
+	return resp	
+
+def merge(arr, e, m, d):
+	
+	n1 = m - e + 1 #tamanho do array temporário esquerdo
+	n2 = d - m #tamanho do array temporário direito
+
+	#Criação dos arrays temporários
+	arr_Temp_Esq = [0] * (n1)
+	arr_Temp_Dir = [0] * (n2)
+
+
+	#Copia as metades de arr para arrays temporários
+	for i in range(0, n1):
+		arr_Temp_Esq[i] = arr[e + i]
+	
+	for j in range(0, n2):
+		arr_Temp_Dir[j] = arr[(m + 1) + j]
+
+	i = 0
+	j = 0
+	k = e
+
+	while i < n1 and j < n2: #primeiro preenchimento com comparação entre os arrays temporários
+	
+		if arr_Temp_Esq[i] <= arr_Temp_Dir[j]:
+
+			arr[k] = arr_Temp_Esq[i]
+			i += 1
+
+		else:
+
+			arr[k] = arr_Temp_Dir[j]
+			j += 1
+		
+		k += 1
+
+	while i < n1:
+		arr[k] = arr_Temp_Esq[i]
+		i += 1
+		k += 1
+
+	while j < n2:
+		arr[k] = arr_Temp_Dir[j]
+		j += 1
+		k += 1
+	
+def mergeSort(arr, e, d):
+	
+	if e < d:
+		
+		m = (e + (d-1)) // 2 # o operador // faz com que a divisão resulte em um número inteiro
+
+		mergeSort(arr, e, m)
+		mergeSort(arr, m+1, d)
+		merge(arr, e, m, d)
+
 
 main()
 
+	
+	
